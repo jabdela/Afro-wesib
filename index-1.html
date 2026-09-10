@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Nova · Creators &amp; Chat</title>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============ TOP HEADER ============ -->
+<header class="topbar">
+  <div class="logo" id="logo-btn">
+    <span class="logo-mark"><i data-lucide="flame"></i></span>
+    <span class="logo-word">Nova</span>
+  </div>
+
+  <nav class="top-tabs" id="top-tabs">
+    <button class="top-tab active" data-top="creators">Creators</button>
+    <button class="top-tab" data-top="videos">Videos</button>
+    <button class="top-tab" data-top="groups">Groups</button>
+    <button class="top-tab" data-top="live">Live</button>
+  </nav>
+
+  <button class="icon-btn" id="hamburger-btn" aria-label="Menu">
+    <i data-lucide="menu"></i>
+  </button>
+</header>
+
+<!-- ============ SIDE DRAWER ============ -->
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<aside class="side-drawer" id="side-drawer">
+  <div class="drawer-head">
+    <span>Menu</span>
+    <button class="icon-btn" id="close-drawer-btn" aria-label="Close menu">
+      <i data-lucide="x"></i>
+    </button>
+  </div>
+
+  <div class="drawer-body">
+    <div class="drawer-row" id="drawer-theme-row">
+      <div class="drawer-row-label">
+        <i data-lucide="moon"></i>
+        <span>Dark mode</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="theme-toggle" checked>
+        <span class="switch-track"><span class="switch-thumb"></span></span>
+      </label>
+    </div>
+
+    <button class="drawer-row drawer-row-btn" id="vip-drawer-btn">
+      <div class="drawer-row-label">
+        <i data-lucide="gem"></i>
+        <span>VIP Membership</span>
+      </div>
+      <i data-lucide="chevron-right"></i>
+    </button>
+
+    <button class="drawer-row drawer-row-btn" id="drawer-profile-btn">
+      <div class="drawer-row-label">
+        <i data-lucide="user"></i>
+        <span>Profile</span>
+      </div>
+      <i data-lucide="chevron-right"></i>
+    </button>
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn btn-block" id="drawer-auth-btn">Sign In / Register</button>
+  </div>
+</aside>
+
+<!-- ============ MAIN VIEWS ============ -->
+<main class="viewport">
+
+  <!-- EXPLORE -->
+  <section class="view active" id="view-explore">
+
+    <div class="filter-bar" id="creators-filter-bar" data-only="creators">
+      <button class="chip active" data-filter="all">All</button>
+      <button class="chip" data-filter="online">Online</button>
+      <button class="chip" data-filter="offline">Offline</button>
+    </div>
+
+    <div class="grid" id="creators-grid"></div>
+    <div class="grid grid-2col" id="videos-grid" style="display:none"></div>
+    <div class="grid" id="groups-grid" style="display:none"></div>
+    <div class="grid grid-2col" id="live-grid" style="display:none"></div>
+
+    <nav class="pagination" id="pagination"></nav>
+  </section>
+
+  <!-- CHAT -->
+  <section class="view" id="view-chat">
+    <div class="chat-layout" id="chat-layout">
+      <div class="chat-sidebar" id="chat-sidebar">
+        <div class="chat-sidebar-head">Messages</div>
+        <div class="chat-list" id="chat-list"></div>
+      </div>
+      <div class="chat-main" id="chat-main">
+        <div class="chat-empty" id="chat-empty">
+          <i data-lucide="message-circle"></i>
+          <p>Select a conversation to start chatting</p>
+        </div>
+        <div class="chat-active" id="chat-active" style="display:none">
+          <div class="chat-active-head" id="chat-active-head">
+            <button class="icon-btn" id="chat-back-btn" aria-label="Back">
+              <i data-lucide="arrow-left"></i>
+            </button>
+            <div class="avatar chat-head-avatar" id="chat-head-avatar"></div>
+            <div class="chat-head-info">
+              <div class="chat-head-name" id="chat-head-name"></div>
+              <div class="chat-head-status" id="chat-head-status">Active now</div>
+            </div>
+          </div>
+          <div class="chat-feed" id="chat-feed"></div>
+          <form class="chat-input-row" id="chat-input-form">
+            <input type="text" id="chat-input" placeholder="Type a message…" autocomplete="off">
+            <button type="submit" class="icon-btn send-btn" aria-label="Send">
+              <i data-lucide="send"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="view" id="view-profile">
+    <div class="profile-card">
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar" id="profile-avatar"></div>
+        <label class="avatar-upload-btn" id="avatar-upload-btn" title="Change photo">
+          <i data-lucide="camera"></i>
+          <input type="file" id="profile-avatar-input" accept="image/*" hidden>
+        </label>
+      </div>
+      <h2 id="profile-name">—</h2>
+      <span class="badge" id="profile-badge">Free Member</span>
+      <div class="profile-email" id="profile-email"></div>
+
+      <div class="profile-stats" id="profile-stats">
+        <div class="stat"><span class="stat-value" id="stat-chats">0</span><span class="stat-label">Chats</span></div>
+        <div class="stat"><span class="stat-value" id="stat-joined">—</span><span class="stat-label">Joined</span></div>
+        <div class="stat"><span class="stat-value" id="stat-status">Free</span><span class="stat-label">Status</span></div>
+      </div>
+
+      <div class="profile-fields" id="profile-fields">
+        <label>
+          Username
+          <input type="text" id="profile-username-input" disabled>
+        </label>
+        <label>
+          Age
+          <input type="number" id="profile-age-input" disabled>
+        </label>
+        <label>
+          City
+          <input type="text" id="profile-city-input" disabled placeholder="Add your city">
+        </label>
+        <label>
+          Bio
+          <textarea id="profile-bio-input" disabled rows="3" placeholder="Tell people a bit about yourself…"></textarea>
+        </label>
+      </div>
+
+      <div class="profile-actions">
+        <button class="btn btn-ghost" id="edit-profile-btn">Edit profile</button>
+        <button class="btn" id="save-profile-btn" style="display:none">Save changes</button>
+      </div>
+
+      <button class="btn btn-vip" id="profile-vip-btn">
+        <i data-lucide="gem"></i> Become a VIP Member
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ BOTTOM NAV ============ -->
+<nav class="bottom-nav">
+  <button class="bottom-tab active" data-main="explore">
+    <i data-lucide="compass"></i>
+    <span>Explore</span>
+  </button>
+  <button class="bottom-tab" data-main="chat">
+    <i data-lucide="message-circle"></i>
+    <span class="unread-dot" id="unread-dot" hidden></span>
+    <span>Chat</span>
+  </button>
+  <button class="bottom-tab" data-main="profile">
+    <i data-lucide="user-round"></i>
+    <span>Profile</span>
+  </button>
+</nav>
+
+<!-- ============ CARD DETAIL MODAL ============ -->
+<div class="modal-overlay" id="detail-modal-overlay"></div>
+<div class="sheet-modal" id="detail-modal">
+  <div class="sheet-handle"></div>
+  <div id="detail-modal-body"></div>
+</div>
+
+<!-- ============ AUTH MODAL ============ -->
+<div class="modal-overlay" id="auth-modal-overlay"></div>
+<div class="center-modal" id="auth-modal">
+  <button class="icon-btn modal-close" data-close="auth-modal"><i data-lucide="x"></i></button>
+
+  <!-- STEP 1: credentials -->
+  <div id="auth-step-credentials">
+    <h3 id="auth-modal-title">Welcome back</h3>
+    <p class="modal-sub" id="auth-modal-sub">Sign in to chat with creators and join the community.</p>
+
+    <form id="auth-form">
+      <div class="field-group" id="auth-username-group" style="display:none">
+        <label>Username</label>
+        <input type="text" id="auth-username" placeholder="yourname">
+      </div>
+      <div class="field-group">
+        <label>Email</label>
+        <input type="email" id="auth-email" placeholder="you@example.com" required>
+      </div>
+      <div class="field-group" id="auth-age-group" style="display:none">
+        <label>Age</label>
+        <input type="number" id="auth-age" placeholder="18" min="18" max="99">
+        <span class="field-hint">You must be 18 or older to join Nova.</span>
+      </div>
+      <div class="field-group">
+        <label>Password</label>
+        <div class="password-field">
+          <input type="password" id="auth-password" placeholder="••••••••" required>
+          <button type="button" class="pw-toggle" data-target="auth-password" aria-label="Show password">
+            <i data-lucide="eye"></i>
+          </button>
+        </div>
+      </div>
+      <div class="field-group" id="auth-confirm-group" style="display:none">
+        <label>Confirm password</label>
+        <div class="password-field">
+          <input type="password" id="auth-confirm-password" placeholder="••••••••">
+          <button type="button" class="pw-toggle" data-target="auth-confirm-password" aria-label="Show password">
+            <i data-lucide="eye"></i>
+          </button>
+        </div>
+      </div>
+      <p class="field-error" id="auth-error" hidden></p>
+      <button type="submit" class="btn btn-block">Continue</button>
+    </form>
+
+    <p class="modal-switch">
+      <span id="auth-switch-text">Don't have an account?</span>
+      <button type="button" id="auth-switch-btn">Register</button>
+    </p>
+  </div>
+
+  <!-- STEP 2: verification code -->
+  <div id="auth-step-verify" style="display:none">
+    <h3>Verify it's you</h3>
+    <p class="modal-sub">We sent a 6-digit code to <strong id="auth-verify-email"></strong>. Enter it below to continue.
+      <span class="mock-note">(Demo mode — use <strong>000000</strong>)</span>
+    </p>
+    <div class="otp-row" id="otp-row">
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-digit">
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-digit">
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-digit">
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-digit">
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-digit">
+      <input type="text" inputmode="numeric" maxlength="1" class="otp-digit">
+    </div>
+    <p class="field-error" id="otp-error" hidden></p>
+    <button type="button" class="btn btn-block" id="otp-verify-btn">Verify &amp; continue</button>
+    <p class="modal-switch"><button type="button" id="otp-back-btn">← Back</button></p>
+  </div>
+</div>
+
+<!-- ============ MEMBERSHIP / PAYWALL MODAL ============ -->
+<div class="modal-overlay" id="membership-modal-overlay"></div>
+<div class="center-modal wide-modal" id="membership-modal">
+  <button class="icon-btn modal-close" data-close="membership-modal"><i data-lucide="x"></i></button>
+  <h3>Unlock VIP Membership</h3>
+  <p class="modal-sub">Full access to creators, videos, groups and unlimited chat.</p>
+
+  <div class="plans-grid" id="plans-grid"></div>
+</div>
+
+<!-- ============ CBE PAYMENT MODAL ============ -->
+<div class="modal-overlay" id="cbe-modal-overlay"></div>
+<div class="center-modal" id="cbe-modal">
+  <button class="icon-btn modal-close" data-close="cbe-modal"><i data-lucide="x"></i></button>
+  <h3>Complete payment</h3>
+  <p class="modal-sub">Pay via Commercial Bank of Ethiopia, then upload your receipt.</p>
+
+  <div class="cbe-summary" id="cbe-summary"></div>
+
+  <div class="cbe-account">
+    <div>
+      <span class="cbe-label">Account number</span>
+      <span class="cbe-number" id="cbe-account-number">1000283940192</span>
+    </div>
+    <button class="btn btn-ghost btn-sm" id="cbe-copy-btn">Copy</button>
+  </div>
+  <div class="cbe-holder">Account holder: <strong>Nova Media &amp; Tech PLC</strong></div>
+
+  <label class="upload-box" id="upload-box">
+    <i data-lucide="upload"></i>
+    <span id="upload-label">Upload payment screenshot</span>
+    <input type="file" id="cbe-file-input" accept="image/*" hidden>
+  </label>
+
+  <button class="btn btn-block btn-vip" id="cbe-submit-btn">Submit &amp; Verify Payment</button>
+</div>
+
+<!-- ============ SUCCESS BANNER ============ -->
+<div class="success-banner" id="success-banner">
+  <i data-lucide="check-circle-2"></i>
+  <span id="success-banner-text">Welcome to VIP! Your membership is now active.</span>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
